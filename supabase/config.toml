@@ -1,0 +1,2 @@
+[functions.whatsapp-batch]
+verify_jwt = false

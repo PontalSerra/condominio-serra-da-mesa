@@ -1,0 +1,24 @@
+{
+  "name": "Condomínio Pontal da Serra Web",
+  "short_name": "Pontal da Serra",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f8f8",
+  "theme_color": "#123d49",
+  "description": "Gestão, faturas, comunicados e pagamentos do Pontal da Serra",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
