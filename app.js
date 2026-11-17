@@ -300,9 +300,9 @@ async function saveReadings(form){const p=activePeriod();if(p?.status==='closed'
  const v={id:old.id||uuid(),period_id:periodId,owner_id:o.id,...fields};if((v.energy_curr!==null&&v.energy_prev!==null&&v.energy_curr<v.energy_prev)||(v.water_curr!==null&&v.water_prev!==null&&v.water_curr<v.water_prev))throw Error('A leitura atual de '+o.name+' é inferior à anterior');rows.push(v)}
  await saveMany('meter_readings',rows,'period_id,owner_id');await refresh();message('Leituras salvas.')
 }
-async function submitForm(e){const form=e.target;if(!form.id)return;
+async function submitForm(e){const form=e.target;if(!form.getAttribute('id'))return;
  e.preventDefault();try{
- switch(form.id){
+ switch(form.getAttribute('id')){
   case 'period-form':{const p=activePeriod();if(p.status==='closed')return;const d=getForm(form);for(const k of periodColumns)d[k]=num(d[k]);if(d.general_curr<d.general_prev||d.pump_curr<d.pump_prev)throw Error('Leitura atual do medidor geral ou da bomba menor que a anterior');if(d.water_divisor<=0)throw Error('Divisor da água inválido');await saveRow('periods',{...p,...d});await refresh();message('Custos gerais salvos.');break}
   case 'newmonth-form':await newMonth(form);break;
   case 'readings-form':await saveReadings(form);break;
