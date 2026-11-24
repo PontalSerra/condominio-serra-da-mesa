@@ -1,136 +1,85 @@
-# PONTAL DA SERRA WEB — PRIMEIRA VERSÃO FUNCIONAL (0.1)
+# Pontal da Serra Web 0.3.2
 
-**Condomínio Pontal da Serra • Serra da Mesa • Niquelândia/GO**
+Atualização preparada para conferência antes da publicação no mesmo endereço e projeto Supabase. O pacote Web contém somente código e exemplos fictícios. Os dados reais são entregues separadamente em um pacote privado.
 
-Esta entrega é um **protótipo funcional**, preparado para ser colocado no GitHub Pages e, depois de conectado ao Supabase, usar autenticação e banco de dados. Não é uma entrega homologada nem um sistema de cobranças pronto para operar com valores reais sem conferência.
 
-## 1. Como abrir e conhecer
+## O que foi concluído em 0.3.2
 
-Abra `index.html` em um navegador moderno; a versão de demonstração usa **dados fictícios**. Se o navegador bloquear módulos locais, publique primeiro pelo GitHub Pages ou execute um servidor local (ex.: `python -m http.server`).
+- Central de relatórios com dez opções: planilha geral mensal com todas as rubricas e totais; resumo coletivo; cobranças e saldos; vencimentos estimados; leituras; recebimentos; provisões e baixas; despesas previstas; investimento solar; extrato individual.
+- Exportação Excel (.xlsx), CSV e impressão/PDF dos relatórios. Valores numéricos são conservados como números no Excel. O resumo coletivo não lista devedores. A planilha geral é administrativa e agrupa lotes por responsabilidade, sem duplicação de cobrança. Rascunhos e saldos pendentes ficam identificados.
+- Explicação do mês na visão individual: conta geral, bomba, água, caseiro, provisões, grupos, cotas e parcela própria. Disponível após o fechamento com fatura própria; valores de terceiros são agregados no servidor sem abrir cadastros alheios. Datas de leitura e próxima leitura podem ser registradas no fechamento.
+- Aviso de nova versão, botão de atualização e confirmação quando há edição não salva. Cache guarda somente a interface pública; dados financeiros exigem internet. Novas versões devem receber identificador de cache próprio.
+- Guia do morador em `instalar.html` e `Guia_do_Morador_Pontal_da_Serra.pdf`, incluído no convite individual. Instalação pelo navegador, cadastro, senha, Pix e atualização.
+- Foto real do condomínio na entrada, convertida para WebP com 90.042 bytes, sem imagem nas faturas/relatórios.
+- Roteiro operacional completo em `ROTEIRO_DE_ENTRADA_EM_USO.md` e verificações em Relatórios > Preparação para começar a usar.
 
-O modo de demonstração permite experimentar o painel do síndico e o espaço individual do condômino. **Não importe dados reais na demonstração**: nessa modalidade as informações são armazenadas apenas no navegador, sem proteção por usuário e sem sincronização.
+O Pix usa o saldo total atualizado. O usuário copia o código e abre seu banco; não há abertura universal de banco nem conciliação automática. Despesas previstas não são todas as saídas bancárias. Relatórios de vencimento estimam abatimento dos saldos mais antigos; pagamentos não têm alocação automática por fatura.
 
-## 2. O que já está programado
+## Conferir sem instalar
 
-- Visual responsivo para computador, iPhone e Android, com manifesto de instalação PWA;
-- Visão do síndico e visão individual, controladas por login no Supabase;
-- Cadastro de condôminos, WhatsApp, consentimento de mensagens, lotes e adesão à energia solar;
-- Acesso de vários usuários a uma mesma conta de cobrança (coproprietários); associação de outros condôminos ao lote sem expor outras faturas;
-- Abertura de competência mensal e vencimento no **dia 10 do mês seguinte**;
-- Leituras individuais de energia e água, pelo nome do responsável; leituras do medidor geral e da bomba;
-- Cálculo da energia por kWh, da água conforme despesa da bomba, taxas de R$ 75 e R$ 35, rateio de caseiro e iluminação apenas entre proprietários com construção, provisões, despesas extras e energia solar por lote aderente;
-- Fechamento e geração de faturas individualizadas, com saldo anterior;
-- Registro de pagamentos e consulta do histórico pelo condômino;
-- Fatura individual formatada com discriminação, leituras, total anterior, saldo atualizado e **Pix Copia e Cola/QR Code estático com valor**, configurável pelo síndico;
-- Impressão ou exportação da fatura em PDF pelo recurso *Imprimir / Salvar como PDF* do navegador;
-- Mural de avisos gerais ou para destinatários selecionados;
-- Preparação de mensagens de cobrança e comunicados por WhatsApp e exportação de CSV com links de envio assistido;
-- Balancete coletivo em CSV e relatório financeiro administrativo nominal;
-- Importação inicial assistida do arquivo XLSX de novembro de 2026, com leitura de `PLANILHA NOV` e `PLANILHA BASE`, quando presentes.
+Abra **PREVIA_OFFLINE.html** no Chrome ou Edge para experimentar as telas e regras com exemplos fictícios. A prévia não utiliza dados reais nem cria contas. A versão conectada ao banco é index.html.
 
-## 3. O que ainda DEPENDE de configuração ou validação
+## Instalar ou atualizar
 
-- **Banco de dados real:** criar o projeto Supabase, executar `supabase/schema.sql`, cadastrar os usuários e definir as permissões;
-- **WhatsApp realmente automático:** configurar WhatsApp Business Platform, número apto, token, modelos aprovados, função `whatsapp-batch` e agendamento seguro. Sem isso, existem apenas mensagens assistidas e a estrutura de integração;
-- **Fatura em PDF como anexo automático do WhatsApp:** NÃO implementada nesta versão. A API envia *modelo aprovado* com informações da fatura e orienta o acesso autenticado ao portal. O PDF individual é gerado pelo navegador;
-- **Comprovante do Pix / baixa automática:** NÃO implementado. O código Pix contém valor, mas o pagamento continua dependendo de conferência e lançamento pelo síndico. Cobrança dinâmica com confirmação exige provedor bancário/PSP e webhook;
-- **Revisão dos rateios conforme assembleia:** os modelos seguem as regras relatadas, mas ainda devem ser ratificados pelo condomínio;
-- **Migração histórica:** valores pendentes e pagamentos importados devem ser conferidos antes da operação. A importação não presume que pagamentos do Excel foram liquidados;
-- **Homologação com dados reais:** testar dois logins diferentes para confirmar que uma conta não consulta dados de outra; revisar fechamento e cálculos de pelo menos três meses.
+1. Guarde uma cópia do banco e dos arquivos atuais.
+2. No SQL Editor do projeto Supabase existente, execute **supabase/INSTALAR_OU_ATUALIZAR.sql**. O script é transacional e reaplicável; preserva usuários e administradores existentes.
+3. Para os dados reais, execute no mesmo SQL Editor o arquivo **Importar_Dados_Reais_PRIVADO.sql**, entregue separadamente. Outra opção é entrar como síndico e selecionar o JSON privado em **Configurações > Importar dados reais**. O mesmo lote de importação não é repetido.
+4. Atualize os arquivos deste pacote na raiz do repositório do site. Preserve o endereço atual. A configuração pública do Supabase foi mantida.
+5. Entre no aplicativo. Em **Fechamento**, confira as pendências de novembro e os saldos anteriores. Em **Configurações**, revise as regras por responsável. O mês permanece em rascunho até a conferência individual das faturas.
 
-## 4. Colocar os arquivos no GitHub (site)
+O arquivo privado com os dados reais, a conferência nominal e o SQL de importação **não devem ser publicados no repositório do site**.
 
-1. Extraia o ZIP em uma pasta do computador.
-2. No GitHub, crie um repositório, por exemplo `pontal-da-serra-web`.
-3. Entre no repositório e escolha **Add file → Upload files**. Encaminhe os arquivos `index.html`, `app.js`, `style.css`, `config.js`, `manifest.webmanifest`, `sw.js` e a pasta `assets` (mantenha as mesmas pastas). Pode enviar também este manual e a pasta `supabase`.
-4. Clique em **Commit changes**.
-5. Em **Settings → Pages**, escolha publicação a partir da branch `main`, pasta `/ (root)`; salve.
-6. Quando o GitHub publicar, o site normalmente terá endereço parecido com `https://SEU_USUARIO.github.io/pontal-da-serra-web/`.
-7. **Atenção:** com `config.js` em branco, o site é apenas uma demonstração local. Nunca publique planilhas reais, nomes, telefones, saldos ou senhas no repositório.
+## Primeiro acesso dos condôminos
 
-**Importante:** GitHub Pages publica a interface; não é um banco de dados. O site não será multiusuário até ser conectado ao Supabase.
+- O síndico entra com sua conta administrativa existente.
+- Em **Configurações > Acesso dos condôminos**, gera um convite individual e o entrega à pessoa certa.
+- O condômino escolhe **Primeiro acesso - criar minha conta**, informa seu e-mail, convite e senha de pelo menos12 caracteres.
+- Confirma o e-mail recebido, entra e informa o convite para vincular seu cadastro. Se a sessão já estiver confirmada, o vínculo acontece durante o cadastro.
+- O convite tem validade de 30 dias e uma única utilização. Para outra pessoa consultar a mesma cobrança, o síndico gera um novo convite. O primeiro acesso permanece válido.
+- A conta nova nunca recebe permissão administrativa por nome, e-mail ou informação digitada no cadastro. O acesso depende da autorização registrada no banco.
 
-## 5. Configurar o Supabase (banco e usuários)
+Antes de divulgar para todos, teste uma conta real de condômino e a recuperação de senha. No Supabase, confira o envio de e-mails, o Site URL e os redirecionamentos para o endereço do site e recuperar-acesso.html. O cadastro e a recuperação dependem desse serviço de e-mail. Na primeira instalação de um projeto vazio, o primeiro administrador deve ser criado no Supabase e incluído em app_admins; essa concessão não é pública.
 
-1. Crie um projeto no Supabase.
-2. Abra **SQL Editor**, cole o conteúdo de `supabase/schema.sql` e execute.
-3. Abra **Authentication → Users** e crie um usuário para o síndico, com e-mail e senha. Copie o identificador UUID (*User ID*).
-4. Pelo **SQL Editor**, conceda papel administrativo a esse usuário (substitua pelo UUID correto):
+## Regras flexíveis
 
-   ```sql
-   insert into public.app_admins(user_id)
-   values ('COLE-AQUI-O-UUID-DO-SINDICO');
-   ```
+Em **Configurações > Regras de cobrança por responsável**, cada pessoa pode ter:
 
-5. Em **Project Settings → API**, copie o `Project URL` e a **anon/publishable key** e informe em `config.js`:
+- Taxa condominial diferente, inclusive isenção, com vigência.
+- Participação independente em caseiro, iluminação, provisões e despesas extraordinárias do período.
+- Seguir cadastro, participar por exceção ou ficar fora do grupo.
+- Número de cotas por grupo, inclusive cotas fracionárias, sem inferir a participação pelo valor da taxa.
+- Mês inicial, término opcional e motivo obrigatório. Uma exceção temporária devolve a regra anterior quando termina.
 
-   ```javascript
-   window.PONTAL_CONFIG = {
-     supabaseUrl: 'https://SEU-PROJETO.supabase.co',
-     supabaseAnonKey: 'CHAVE-PUBLICA-ANON-OU-PUBLISHABLE',
-     appName: 'Pontal da Serra Web'
-   };
-   ```
+Sem regra individual, o padrão considera construção e uma participação por responsável. Vários lotes da mesma pessoa não multiplicam automaticamente o rateio. Duas responsabilidades realmente independentes podem ser vinculadas ao mesmo lote em **Casa independente**. Despesas extras cadastradas separadamente conservam seus próprios destinatários.
 
-6. Salve o arquivo modificado e envie novamente ao repositório. **NUNCA coloque `service_role`, tokens privados do WhatsApp ou senhas em `config.js`.**
-7. Acesse o site e entre com o usuário do síndico. Cadastre os titulares de cobrança e, se necessário, importe a planilha original.
-8. Para cada condômino que terá acesso, crie um usuário em **Authentication → Users**, copie o UUID e inclua no campo de UID do cadastro. Caso duas pessoas precisem acessar a mesma fatura, use o botão **Acessos** no cadastro do titular para associar os UIDs adicionais.
-9. Teste um segundo usuário: ele deverá ver apenas seus lotes, avisos e faturas, sem acesso a cadastros e débitos alheios. As regras RLS do banco protegem os dados mesmo que alguém manipule o código no navegador.
+O fechamento mostra os participantes e a soma das cotas de cada grupo. Despesas sem destinatário bloqueiam a emissão. Faturas fechadas preservam valores, critérios e identificação histórica; regras retroativas que alcancem meses fechados são bloqueadas.
 
-**Não disponibilize dados pessoais antes de concluir e testar essas etapas.**
+## Energia, água e provisões
 
-## 6. Fluxo mensal sugerido ao síndico
+- O central engloba ranchos, bomba, casa do caseiro e residual quando a bomba faz parte do geral.
+- As leituras da casa do caseiro identificam seu consumo de energia e água; 100% desses custos entram no grupo caseiro.
+- A água é proporcional aos hidrômetros, incluindo a casa do caseiro no denominador. O fator de conversão precisa ser conferido no medidor.
+- Quando o salário já estiver incluído nas taxas ordinárias, marque essa opção; as provisões continuam calculadas sobre o salário-base.
+- Provisão mensal:13º=salário/12 e férias com1/3=salário/9; total=salário×7/36.
+- As parcelas são distribuídas em centavos, com desempate estável por identificador. A soma dos componentes concilia com o total; pequenas diferenças em relação a aproximações manuais decorrem dessa distribuição.
 
-1. **Novo mês:** criar competência (ex.: novembro de 2026, com vencimento 10/12/2026).
-2. **Leituras:** digitar leituras recebidas do Farofa; a leitura anterior vem do mês anterior, quando disponível.
-3. **Fechamento:** digitar conta geral de energia, leitura geral, leitura e gasto da bomba, salário/despesas do caseiro, iluminação, férias/13º, extraordinárias e, se houver, parcelas de energia solar.
-4. **Conferência:** verificar a prévia detalhada, especialmente condomínios com dois lotes, construídos e vazios.
-5. **Fechar mês:** o sistema cria faturas e mantém registro da competência. Se a API do WhatsApp estiver configurada, tentará disparar os modelos de fatura automaticamente.
-6. **Pagamentos:** lançar cada recebimento com nome, data e valor. O saldo anterior é carregado pelo histórico de cobranças menos o histórico de pagamentos; não deve ser lançado uma segunda vez no novo mês.
-7. **Dia 9:** a função agendada pode enviar lembretes aos destinatários que optaram pelo WhatsApp e ainda têm saldo, com vencimento no dia 10.
-8. **Relatórios:** exportar balancete geral (sem dados pessoais) para o grupo e controle financeiro detalhado para a administração.
+## Dados reais e conferência
 
-## 7. Regras que merecem confirmação
+A importação privada organiza responsáveis, lotes, leituras, participação, taxas e investimento solar. Não presume quitações não comprovadas nem transforma marcações PAGO em pagamentos inventados. Saldos de abertura permanecem sinalizados para conferência. As divergências dos documentos ficam registradas na importação e na competência.
 
-- **Taxa:** um rancho construído do mesmo titular paga R$ 75; os demais lotes do mesmo titular, R$ 35 cada, inclusive lotes vazios. Titulares sem construção pagam somente R$ 35 por lote.
-- **Caseiro, iluminação e provisão:** uma cota por responsável com ao menos um lote construído; titulares só com lotes vazios são isentos dessas rubricas. **Confirme em assembleia**, especialmente no caso de propriedade compartilhada.
-- **Energia elétrica individual:** (leitura atual − anterior) × tarifa de kWh do mês.
-- **Água:** (leitura atual − anterior) ÷ 1.000, como indicam os registros originais do Excel. O divisor fica configurável para medidores diferentes. Valor do m³ = custo da bomba ÷ consumo total medido. Se não houver consumo total, não é possível ratear o custo da bomba automaticamente.
-- **Energia solar:** por lote marcado como participante, com valor mensal configurado pelo síndico.
-- **Despesas extras:** podem ser por titulares construídos (padrão), todos os titulares ou número de lotes, conforme decisão específica da assembleia.
-- **Lotes com dois donos:** cada lote possui um responsável financeiro definido; outros acessos à mesma conta são cadastrados expressamente.
-- **Dívida histórica:** o campo *Saldo inicial* serve para transportar valores já conferidos anteriores à implantação. Após começar a emitir faturas, não repita o valor em outro lançamento.
+O investimento solar mantém razão própria, uma cota por responsabilidade participante. Pagamentos e devoluções são separados. Os valores extraídos de imagens são identificados como informados na planilha de origem, não como conciliação bancária automática.
 
-## 8. WhatsApp Business e agendamento de lembrete
+## Testes e estado
 
-O código da função está em `supabase/functions/whatsapp-batch/index.ts`. Ele **não envia mensagens por conta própria** até ser instalado e receber credenciais válidas.
+Veja **TESTES_DE_HOMOLOGACAO.md** e **ESTADO_DO_PROJETO.md**. A atualização foi testada localmente. Isso não significa implantação no projeto remoto nem teste de entrega de e-mails no serviço real. A publicação e aplicação no Supabase serão feitas depois da conferência.
 
-1. Habilite a Plataforma WhatsApp Business da Meta e obtenha `PHONE_NUMBER_ID` e token com permissão de envio.
-2. Crie e tenha aprovados os templates utilitários em português (`pt_BR`):
-   - `pontal_fatura` — **4 campos**, nesta ordem: nome; competência; saldo; vencimento;
-   - `pontal_lembrete` — **3 campos**, nesta ordem: nome; saldo; vencimento.
-   O corpo do template deve informar que a fatura detalhada está disponível no portal após login; não inclua informações pessoais de terceiros.
-3. Configure no Supabase os secrets `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_TEMPLATE_INVOICE`, `WHATSAPP_TEMPLATE_REMINDER`, `CRON_SECRET` e demais secrets do projeto. **Não envie esses segredos para o GitHub**.
-4. Instale a Supabase CLI e execute `supabase functions deploy whatsapp-batch --no-verify-jwt`. A própria função valida o JWT do síndico ou o segredo do agendador; o flag de deploy exige esse cuidado.
-5. Para executar automaticamente no dia 9, programe uma tarefa HTTP autenticada no Supabase Cron que faça `POST` na função `/functions/v1/whatsapp-batch`, com header `X-Cron-Secret: SEU_SEGREDO` e JSON `{"kind":"reminder"}`. A função descobre o mês anterior pela data de Brasília e só envia no dia 9. O cron em UTC para **08h30 de Brasília** é normalmente `30 11 9 * *` (UTC−3). Verifique a região e a configuração do projeto.
-6. Teste com um número autorizado e confira os logs de entregas. O envio pode ter tarifas cobradas pela Meta/provedor.
+As bibliotecas de QR Code, leitura de Excel e cliente Supabase estão incluídas localmente, com versões e licenças em vendor/.
 
-**A API do WhatsApp não permite mensagens arbitrárias fora da janela autorizada; por isso os avisos automáticos usam templates aprovados.** Os comunicados livres ficam disponíveis no mural e como mensagens assistidas.
+Para executar os testes de desenvolvimento: Node 24 ou compatível, `npm install`, `npm test` e `npm run check`. A aplicação estática não precisa de Node para funcionar no GitHub Pages.
 
-## 9. Uso no iPhone e Android
+O arquivo **demonstracao.html** permite uma demonstração separada com dados fictícios. Ele não importa dados reais nem substitui o banco autenticado.
 
-No iPhone, abra o site HTTPS pelo Safari e use **Compartilhar → Adicionar à Tela de Início**. No Android, abra pelo Chrome e escolha **Instalar aplicativo** ou **Adicionar à tela inicial**. No computador, o navegador também pode oferecer instalação.
+## Documentação técnica
 
-O PWA usa um único código e uma única base remota. Os dados dependem de conexão para atualizar e consultar com segurança.
-
-## 10. Atenções de segurança e jurídicas
-
-- Este protótipo não é laudo sobre a regularidade fundiária do condomínio. Regras de rateio, cobrança e votação devem ser aprovadas conforme a situação jurídica real do Pontal da Serra.
-- As leituras e débitos reais são dados pessoais/patrimoniais. A divulgação de relatórios nominais no grupo precisa ser avaliada pela administração à luz da LGPD, privilegiando um balancete coletivo sem nomes ou saldos individualizados.
-- Não publique os arquivos reais do Excel nem as mensagens de WhatsApp originais no GitHub.
-- Faça backups periódicos do Supabase e mantenha registros dos comprovantes.
-- Faça uma conferência com o banco antes de usar o Pix; o **Pix estático com valor não confirma pagamento automaticamente**.
-
----
-
-**Status da entrega:** aplicativo HTML/JS + PWA + SQL com RLS + função preparatória de WhatsApp. Testes programáticos verificaram a sintaxe JavaScript, as regras básicas R$ 75/R$ 35, isenção de caseiro para lote vazio e CRC do Pix. **Não foram feitos testes ponta a ponta em Supabase/Meta nem publicação no seu GitHub**, pois exigem suas contas e credenciais.
+- [Cadastro por e-mail no Supabase](https://supabase.com/docs/reference/javascript/auth-signup)
+- [Funções e permissões no Supabase](https://supabase.com/docs/guides/database/functions)

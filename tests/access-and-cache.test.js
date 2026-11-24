@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import fs from 'node:fs/promises';import vm from 'node:vm';import {newInvite,inviteHash,normalizeInvite,signupErrors} from '../acesso.js';
+test('convite do navegador usa o mesmo hash validado pelo banco',async()=>{const code=newInvite();assert.match(code,/^[a-f0-9]{64}$/);const formatted=code.toUpperCase().match(/.{1,8}/g).join('-');assert.equal(normalizeInvite(formatted),code);assert.equal(await inviteHash(formatted),createHash('sha256').update(code).digest('hex'));assert.ok(signupErrors('invalido','curta','outra',code).length);assert.deepEqual(signupErrors('exemplo@example.invalid','Senha de exemplo123','Senha de exemplo123',code),[]);});
+test('cache entrega a mesma versão, ignora dados e só ativa atualização por mensagem',async()=>{
+ const callbacks={},deleted=[],network=[];let claimed=0,skipped=0;const cached={version:'0.3.2'},cache={addAll:async()=>{},match:async request=>request.url.endsWith('app.js')?cached:undefined};
+ const context={URL,self:{registration:{scope:'https://example.invalid/pontal/'},clients:{claim:async()=>claimed++},skipWaiting:async()=>skipped++,addEventListener:(type,fn)=>callbacks[type]=fn},caches:{open:async()=>cache,keys:async()=>['pontal-serra-app-v01','outro-aplicativo'],delete:async key=>deleted.push(key)},fetch:async r=>{network.push(r.url);return{ok:true};}};
+ vm.runInNewContext(await fs.readFile(new URL('../sw.js',import.meta.url),'utf8'),context);let result;
+ for(const url of ['dados-privados.json','https://example.invalid/api']){callbacks.fetch({request:{method:'GET',url:url.startsWith('https')?url:'https://example.invalid/pontal/'+url},respondWith:value=>result=value});assert.equal(result,undefined);}
+ callbacks.fetch({request:{method:'GET',url:'https://example.invalid/pontal/app.js'},respondWith:value=>result=value});assert.equal(await result,cached);assert.equal(network.length,0);
+ let activation;callbacks.activate({waitUntil:value=>activation=value});await activation;assert.deepEqual(deleted,['pontal-serra-app-v01']);assert.equal(claimed,1);assert.equal(skipped,0);
+ callbacks.message({data:{type:'OUTRO'},waitUntil:()=>assert.fail()});callbacks.message({data:{type:'ACTIVATE_UPDATE'},waitUntil:v=>activation=v});await activation;assert.equal(skipped,1);
+});

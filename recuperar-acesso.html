@@ -46,7 +46,7 @@
     const showReset=()=>{ $('request-form').classList.add('hidden');$('reset-form').classList.remove('hidden');$('help').textContent='Confirme sua nova senha para concluir a recuperação.'; };
     const config=window.PONTAL_CONFIG || {};
     if(!config.supabaseUrl || !config.supabaseAnonKey){ feedback('Configuração do Supabase ausente. Entre em contato com o administrador.',true); throw Error('config missing'); }
-    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+    const { createClient } = await import('./vendor/supabase.js');
     const supabase=createClient(config.supabaseUrl,config.supabaseAnonKey,{auth:{detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
     const url=new URL(location.href), hash=new URLSearchParams(location.hash.slice(1));
     const hasRecoveryParams=url.searchParams.has('code') || hash.get('type')==='recovery' || hash.has('access_token');

@@ -1,0 +1,4 @@
+import {build} from 'esbuild';import fs from 'node:fs/promises';
+const built=await build({entryPoints:['app.js'],bundle:true,minify:true,format:'iife',platform:'browser',target:'es2020',write:false,legalComments:'eof'});
+const js=built.outputFiles[0].text.replace(/<\/script/gi,'<\\/script'),qr=(await fs.readFile('vendor/qrcode.min.js','utf8')).replace(/<\/script/gi,'<\\/script'),css=await fs.readFile('style.css','utf8');
+await fs.writeFile('PREVIA_OFFLINE.html',`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pontal da Serra - demonstração com dados fictícios</title><style>${css}</style></head><body><div id="app">Abrindo demonstração...</div><script>window.PONTAL_CONFIG={};</script><script>${qr}</script><script>${js}</script></body></html>`);

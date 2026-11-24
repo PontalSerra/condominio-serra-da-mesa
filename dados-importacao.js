@@ -1,0 +1,19 @@
+/* Importação privada. Este módulo não inclui dados reais. */
+import {ruleErrors} from './rateios.js';
+const tables=['owners','lots','periods','meter_readings','allocation_rules','solar_participants','solar_transactions'];
+const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
+export function validatePayload(payload){
+ if(payload?.format!=='pontal-serra-import-v1'||!/^[a-f0-9]{64}$/.test(payload.batch_id||''))throw Error('Este arquivo não é uma importação privada do Pontal da Serra.');
+ for(const table of tables){if(!Array.isArray(payload.data?.[table])||payload.data[table].length>3000)throw Error('Tabela de importação inválida: '+table);const seen=new Set();for(const row of payload.data[table]){if(!(table==='periods'?/^\d{4}-(0[1-9]|1[0-2])$/.test(row.id):uuid.test(row.id))||seen.has(row.id))throw Error('Identificação inválida ou repetida em '+table);seen.add(row.id);}}
+ for(const owner of payload.data.owners)if(!owner.name?.trim()||!Number.isFinite(owner.opening_balance)||!Number.isFinite(owner.monthly_fee)||owner.monthly_fee<0)throw Error('Confira nome, saldo e taxa dos responsáveis.');
+ const lotNumbers=new Set();for(const lot of payload.data.lots){if(!lot.number||lotNumbers.has(lot.number)||typeof lot.built!=='boolean')throw Error('Número de lote repetido ou cadastro inválido.');lotNumbers.add(lot.number);}
+ for(const reading of payload.data.meter_readings)for(const kind of ['energy','water']){const previous=reading[kind+'_prev'],current=reading[kind+'_curr'];if([previous,current].some(value=>value!==null&&(!Number.isFinite(value)||value<0))||(previous!==null&&current!==null&&current<previous))throw Error('Leitura inválida na importação.');}
+ for(const rule of payload.data.allocation_rules){const errors=ruleErrors(rule,payload.data.allocation_rules.filter(other=>other!==rule),[]);if(errors.length)throw Error(errors.join(' '));}
+ for(const participant of payload.data.solar_participants)if(!Number.isFinite(participant.quota)||participant.quota<=0)throw Error('Cota solar inválida.');
+ const owners=new Set(payload.data.owners.map(o=>o.id)),participants=new Set(payload.data.solar_participants.map(o=>o.id));
+ for(const row of [...payload.data.lots,...payload.data.meter_readings,...payload.data.allocation_rules,...payload.data.solar_participants])if(!owners.has(row.owner_id))throw Error('Há registro sem responsável na importação.');
+ for(const row of payload.data.solar_transactions)if(!participants.has(row.participant_id)||!['payment','refund','reversal','adjustment'].includes(row.kind)||!Number.isFinite(row.amount)||row.amount===0||(row.kind!=='adjustment'&&row.amount<0))throw Error('Há lançamento solar inválido na importação.');
+ return payload;
+}
+export function importPreview(payload,escape,brl){const data=validatePayload(payload).data;return `<p><b>${escape(payload.source_name)}</b></p><p>${data.owners.length} responsáveis, ${data.lots.length} lotes, ${data.meter_readings.length} leituras, ${data.solar_participants.length} cotas solares e ${data.solar_transactions.length} lançamentos solares.</p><p>Os dados serão gravados em uma única transação. Cadastros existentes serão conciliados pelo nome e lote; saldos já cadastrados serão preservados. A competência importada permanece em rascunho.</p><div class="note alert"><b>Pontos para conferência</b><ul>${(payload.notes||[]).map(note=>`<li>${escape(note)}</li>`).join('')}</ul></div><div class="table-wrap"><table><thead><tr><th>Responsável</th><th>Taxa mensal</th><th>Saldo de abertura a conferir</th></tr></thead><tbody>${data.owners.map(o=>`<tr><td>${escape(o.name)}</td><td>${brl(o.monthly_fee)}</td><td>${brl(o.opening_balance)}</td></tr>`).join('')}</tbody></table></div><div class="actions" style="margin-top:15px"><button class="btn primary" data-action="privatecommit">Importar dados reais em rascunho</button></div>`;}
+export const importTables=tables;
