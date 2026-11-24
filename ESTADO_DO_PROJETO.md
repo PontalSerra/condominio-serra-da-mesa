@@ -1,11 +1,9 @@
 # Estado da versão 0.3.6 — 24/11/2026
 
-A versão 0.3.5 foi aplicada pelo usuário no Supabase e no GitHub. O GitHub Pages apresentou sucesso. A correção privada solar também foi executada e retornou pagamento corrigido e saldo zero do registro corrigido. Não reaplicar a importação antiga.
+Código 0.3.6 consolidado no repositório existente. O banco recebeu as estruturas de melhorias e explicação provisória; a troca do marcador de versão acompanha a publicação do site. O resultado de cada publicação pode ser conferido em Actions / GitHub Pages.
 
-A versão 0.3.6 foi preparada e testada localmente. A migração e os arquivos precisam ser aplicados pelo responsável. Não há acesso administrativo remoto usado nesta revisão. A remoção do teste foi validada numa cópia fictícia; ainda não foi confirmada em produção.
+O cadastro fictício, lote de teste e sua leitura zerada foram removidos com auditoria. Comparação de contagens e hashes em 18 tabelas confirmou preservação dos dados reais. Novembro permanece em rascunho e não houve emissão de faturas.
 
-Incluídos o botão privado Anotar melhoria, explicação detalhada com consumo próprio, publicação opcional de prévias antes de fechar e exclusão restrita ao registro de homologação. A publicação de prévias é explícita; mudar dados de origem invalida as prévias. Faturas definitivas e relatório preservado mantêm seu fluxo anterior.
+Botão Anotar melhoria privado por conta administrativa, detalhamento de consumos próprios e publicação opcional de explicações provisórias incluídos. Mudanças nas fontes de cálculo invalidam as prévias, que devem ser publicadas novamente. As regras financeiras e permissões administrativas foram preservadas.
 
-O histórico financeiro real e as regras aprovadas não foram alterados. Novembro não foi fechado nem teve pendências resolvidas automaticamente. Nenhum privilégio administrativo novo foi concedido.
-
-Face ID/passkeys exigem ativação externa e teste físico; informações ambientais são links. Integrações de envio automático, banco e solicitações permanecem pendentes. Consulte LEIA_PRIMEIRO.md.
+Pendentes: ativação externa e teste físico de chaves de acesso; informações ambientais são links; WhatsApp automático, conciliação bancária e acompanhamento de solicitações não estão implementados. Não reimportar os dados antigos nem repetir a correção privada solar já concluída.

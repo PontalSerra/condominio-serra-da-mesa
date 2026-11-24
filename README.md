@@ -1,6 +1,6 @@
 # Pontal da Serra Web 0.3.6 — 24/11/2026
 
-Correção da versão 0.3.5. Implementada e testada localmente; ainda não aplicada ao site ou ao banco remoto.
+Correção da versão 0.3.5. Código da atualização 0.3.6, testado localmente. Banco atualizado no projeto existente; a publicação é acompanhada pelo GitHub Pages.
 
 ## Correções desta entrega
 
@@ -11,12 +11,12 @@ Correção da versão 0.3.5. Implementada e testada localmente; ainda não aplic
 
 ## Instalar, uma etapa de cada vez
 
-1. No SQL Editor do mesmo Supabase, executar **02_ATUALIZAR_BANCO.sql** (somente a migração desta versão, para quem já instalou 0.3.5). A estrutura é reaplicável. O comando contém exclusão controlada do cadastro fictício pedido pelo responsável.
+1. No SQL Editor do mesmo Supabase, executar **supabase/migracao_v0_3_6.sql** (no ZIP de entrega, a mesma migração está em **02_ATUALIZAR_BANCO.sql**; para quem já instalou 0.3.5). A estrutura é reaplicável. O comando contém exclusão controlada do cadastro fictício pedido pelo responsável.
 2. No GitHub, enviar o conteúdo de **01_SITE_PUBLICAR**, preservando as pastas, e confirmar o commit. Esperar o GitHub Pages ficar verde.
 3. Abrir o aplicativo, aplicar a atualização e conferir **0.3.6**. Não reimportar dados reais nem reaplicar a correção solar que já foi concluída.
 4. Conferir o botão **Anotar melhoria**. Em Cadastros, verificar a ausência do teste; se ainda existir, o botão de exclusão informa o vínculo que impediu a remoção. Em Fechamento, disponibilizar a explicação provisória quando desejar mostrá-la aos moradores.
 
-O instalador cumulativo continua em `01_SITE_PUBLICAR/supabase/INSTALAR_OU_ATUALIZAR.sql` para instalações anteriores. Quem já está em 0.3.5 pode usar o arquivo incremental acima. Esta entrega não fecha o mês, não altera leituras, não regulariza pendências nem emite cobranças.
+O instalador cumulativo continua em `supabase/INSTALAR_OU_ATUALIZAR.sql` (no ZIP, dentro de `01_SITE_PUBLICAR`) para instalações anteriores. Quem já está em 0.3.5 pode usar o arquivo incremental acima. Esta entrega não fecha o mês, não altera leituras, não regulariza pendências nem emite cobranças.
 
 ## Pendências que não são apresentadas como concluídas
 
