@@ -31,3 +31,17 @@ input[type=file]{width:100%;font-size:13px;padding:9px;border:1px dashed #a4b6b5
 .report-wide table{min-width:1800px}.report-wide tfoot{background:#dcece6;font-weight:800}.admin-report tfoot{background:#e9f2ef}
 @media print{@page pontal-wide{size:A3 landscape;margin:10mm}.report-wide{page:pontal-wide}.report-wide table{table-layout:fixed;width:100%;font-size:7pt;min-width:0!important}.report-wide th,.report-wide td{overflow-wrap:anywhere;padding:5px}.report-wide th:first-child,.report-wide td:first-child{width:32mm}.report-wide th:nth-child(2),.report-wide td:nth-child(2){width:11mm}}
 @media print{#modal-root .modal.wide{width:100%!important;box-sizing:border-box}.admin-report th{white-space:normal;letter-spacing:0;font-size:inherit}.report-wide th,.report-wide td{white-space:normal;overflow-wrap:anywhere}.report-wide{width:100%}}
+
+/* 0.3.3: menu e identificação ocupam áreas distintas, inclusive com zoom. */
+@media screen and (min-width:761px){
+ .sidebar{display:flex;flex-direction:column;height:100vh;height:100dvh;min-height:0;overflow:hidden}
+ .sidebar>.brand{flex:0 0 auto;min-width:0}
+ .sidebar>.nav{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-bottom:16px;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-color:#84aaa9 transparent;scrollbar-width:thin}
+ .sidebar>.nav::-webkit-scrollbar{width:6px}
+ .sidebar>.nav::-webkit-scrollbar-thumb{background:#84aaa9;border-radius:6px}
+ .sidebar>.nav button{flex:0 0 auto}
+ .sidebar>.sidefoot{position:static;flex:0 0 auto;min-width:0;margin-top:12px;padding-top:12px;border-top:1px solid #ffffff22;overflow-wrap:anywhere}
+ .sidebar>.nav button:focus-visible{outline:2px solid #c5ebdb;outline-offset:-2px}
+}
+
+.community-item{padding:18px 0;border-bottom:1px solid #dce5e6}.community-text{white-space:pre-wrap;overflow-wrap:anywhere}.security-key{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #dce5e6}

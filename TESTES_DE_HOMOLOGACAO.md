@@ -1,32 +1,31 @@
-# Validação local 0.3.2
+# Validação local 0.3.5 — 24/11/2026
 
 ## Testes automatizados
 
-44 testes Node/PostgreSQL passaram. Cobertura: participação independente da taxa e da construção; cotas fracionárias; denominadores por grupo; múltiplos lotes; vigência temporária e retorno; exclusão individual; distribuição exata em centavos; competências fechadas; salário incluído ou separado; medidores de bomba e caseiro; água proporcional; provisões; bloqueios por pendências e diferenças; convite único e expirado; ausência de elevação administrativa; isolamento de registros por RLS; bloqueio de acesso anônimo; importação administrativa, transacional e sem repetição.
+58 testes Node/PostgreSQL passaram. Cobertura financeira anterior preservada: tarifas, bomba incluída ou externa ao geral, caseiro integralmente rateado, água proporcional, provisão 7/36, participação/cotas, regras por vigência e arredondamento em centavos. Testes de faturas, relatórios, Excel, convites e RLS mantidos.
 
-## Instalação e dados reais
+Novos testes: simulação sem alteração de dados; reabertura administrativa com motivo, arquivo integral das faturas, retirada do saldo ativo e novo fechamento; bloqueios por pagamentos, competência posterior, baixa de reserva e envio registrado; proteção contra variável de sessão forjada e contra reutilização de IDs arquivados. Documentos gerais, mensais e do solar publicados somente para membros; rascunhos e arquivos sem publicação visível não são expostos. Usuários comuns não publicam documentos nem alteram permissões.
 
-Instalador completo executado em PostgreSQL local novo e reaplicado. Importação privada real executada duas vezes sem repetir registros: 31 responsáveis, 35 lotes e 41 lançamentos solares. A origem conferida no cliente correspondeu à fotografia do banco. Um fechamento de teste com 31 faturas, após resolver as pendências somente na cópia de teste, conciliou R$ 5.609,94. O arquivo entregue conserva as pendências e a competência em rascunho.
+Passkeys: suporte do navegador, confirmação de sessão pelo servidor, cadastro, remoção, cancelamento e mensagens de recurso desabilitado. Esses testes usam chamadas simuladas; não representam homologação da biometria física.
 
-## Interface
+## Instalação e dados
 
-Navegador Chromium: configuração individual de lote vazio com meia cota, salvamento e persistência após recarregar, participantes do fechamento e navegação móvel. Sem erros JavaScript nos fluxos executados. QR Code de uma fatura fictícia decodificado e comparado com o Pix Copia e Cola e o saldo mostrado. Impressão isolada da fatura verificada em uma página, sem avisos sobrepostos. Datas de emissão exibidas no horário de Brasília. Telas revisadas visualmente em computador e celular.
+Instalador completo aplicado e reaplicado em PostgreSQL local. Importação privada repetida sem duplicação. Correção solar aplicada duas vezes: mesmo valor final e um único ajuste identificado na auditoria. Fechamento de cópia local com 31 responsáveis conciliou o cálculo e o demonstrativo agregado do servidor; a reabertura arquivou as 31 faturas e retirou-as do razão ativo. Nenhuma dessas operações foi executada no projeto real nesta preparação. As pendências só foram resolvidas na cópia local para testar o ciclo.
 
-Primeiro acesso: cadastro com solicitação de confirmação de e-mail, rejeição de convite inválido e vínculo ao portal de proprietário, com provedor simulado. O resgate de convite, uso único, expiração e RLS foram testados no PostgreSQL local.
+## Interface e relatórios
 
-## Verificação final no projeto real
+Chromium: dez menus administrativos em 1280×900, 1366×768, 1024×600, 1024×480 e 800×360. Sem sobreposição do rodapé, incluindo Relatórios/Configurações. Texto ampliado e navegação móvel 390×844. Dez relatórios abertos e dez exportações Excel. Sem erros JavaScript nesses fluxos.
 
-A entrega de e-mails pelo Supabase real, os redirecionamentos publicados e uma conta real de condômino precisam ser verificados depois da atualização. Políticas adicionais que já existam no banco remoto e a configuração efetiva do provedor de e-mail não foram inspecionadas nesta preparação.
+Simular, conferir faturas, fechar, reabrir com motivo e ciência e fechar novamente: faturas não duplicadas, novos identificadores e histórico preservado. Documentos publicados e rascunhos persistiram após recarregar; a visão do condômino ocultou rascunhos e mostrou documentos mensais/solares.
 
-Não houve publicação nem alterações no Supabase remoto. Os dados reais permanecem em arquivos privados de importação e na base local isolada de conferência.
+Fluxo conectado com provedor simulado: criar/remover chave e entrar novamente; enviar PDF mensal e do investimento no bucket privado; abrir link temporário de 90 segundos. Não houve upload real de documentos pessoais nesses testes.
 
+Atualização real de cache de 0.3.2 diretamente para 0.3.5 em HTTPS local: aviso, aplicação e preservação dos dados fictícios salvos; menu Relatórios acessível após atualizar.
 
-## Evidências adicionais 0.3.2
+Guia do morador gerado da fonte HTML distribuída e revisado visualmente em três páginas, sem cortes ou sobreposição.
 
-Dez relatórios abertos pela interface, dez downloads CSV e dez downloads Excel (.xlsx), sem erros JavaScript no fluxo executado. A biblioteca reabriu os arquivos Excel e confirmou números, filtro de cabeçalho e texto sem fórmulas executáveis. Planilha mensal soma rubricas e totais sem multiplicar dono de vários lotes. Cobrança a vencer, pagamentos parciais, créditos, datas de Brasília, extras e isolamento do extrato foram testados.
+## Conferência depois da implantação
 
-Demonstrativo verificado em computador e viewport móvel de 390 px, sem transbordamento horizontal da página; a tabela larga permite rolagem dentro do painel. Impressão com cabeçalho do mês e tabelas, guia PDF de duas páginas e entrada com foto foram revisados visualmente. Instalação física em Android/iPhone precisa do teste no ambiente real.
+Aplicar o SQL cumulativo e a correção privada; atualizar a interface; conferir 0.3.5. Testar conta real não administrativa, acesso do síndico, entrega de e-mails, confirmação/recuperação de senha e upload/download efetivo dos documentos. Ativar passkeys no Supabase e testar iPhone/Safari e Android/Chrome antes de divulgar a função como pronta para todos.
 
-Atualização real entre dois identificadores de cache em servidor HTTPS local: aviso exibido, cancelamento manteve o campo não salvo, confirmação aplicou a nova versão e recuperou somente os dados já gravados. Teste de atualização externa não descarta formulário. URLs de API e JSON privado não são interceptadas pelo cache. Falha de download não ativa conjunto incompleto.
-
-Instalador consolidado completo aplicado duas vezes em banco local, importação real repetida sem duplicar, 31 faturas locais totalizando R$ 5.609,94; relatório agregado SQL e cliente conciliados e sem nomes/IDs de responsáveis. As pendências só foram resolvidas na cópia de teste, não no arquivo real de importação.
+Fontes ambientais são acessadas por links externos oficiais, sem dados de clima, lua ou pesca inventados. Documentos do estatuto, atas, contas e fotos precisam ser anexados pelo síndico.

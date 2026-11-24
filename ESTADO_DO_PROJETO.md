@@ -1,22 +1,13 @@
-# Estado da preparação 0.3.2
+# Estado da versão 0.3.5 — 24/11/2026
 
-A atualização está implementada em arquivos, com dados reais importados e conferidos em uma base local de testes isolada. O pacote privado permite aplicar a mesma importação ao projeto real. O sistema remoto não foi modificado e o site não foi publicado nesta preparação.
+Preparada em arquivos, sem publicação. O site efetivo foi consultado durante a revisão e app.js ainda corresponde à versão 0.3.2. A atualização 0.3.5 incorpora 0.3.3 e 0.3.4, preservando a configuração pública do projeto e os dados existentes.
 
-Estão preparados:31 responsáveis,35 lotes,26 leituras individuais,31 regras por vigência,31 participações solares e 41 lançamentos solares. Vinte e seis responsáveis participam dos grupos caseiro, iluminação e provisões. Telefones/e-mails ausentes nas planilhas não foram inventados.
+Incluídos menu corrigido, contas familiares e convites independentes, identificação do síndico, simulação e reabertura auditada, Vida no Pontal, documentos do mês e do solar, chaves de acesso e ícone Windows. Passkeys dependem da ativação e conferência no serviço real e em aparelhos compatíveis.
 
-Novembro permanece em rascunho. Precisam de conferência:unidade dos hidrômetros, divergências entre foto/folha/Excel dos medidores, composição do salário nas taxas e saldos anteriores após os últimos pagamentos. O investimento solar tem divergência no cabeçalho e marcações de quitação que não correspondem aos valores.
+A instalação 0.3.2 e a importação real foram executadas pelo usuário. Dois administradores tiveram e-mail confirmado. Um terceiro acesso administrativo foi orientado por SQL para a conta pessoal do síndico, mas o resultado não foi verificado nesta revisão. Não conceder administração automaticamente nem divulgar e-mails pessoais na documentação pública.
 
-Para concluir no ambiente real:aplicar a atualização do banco, importar o arquivo privado, atualizar os arquivos do site e testar uma conta real, confirmação de e-mail e recuperação de senha. Conferir as faturas antes de fechar novembro e distribuir convites de acesso.
+Novembro permanece com pendências reais de leitura geral/bomba, unidade dos hidrômetros, composição do salário, participantes e pagamentos posteriores. Não houve fechamento ou reabertura no projeto remoto. A conferência das faturas importadas foi local, com pendências resolvidas somente na cópia de teste.
 
-Se houver cadastros fictícios antigos no projeto real, eles serão preservados. Podem ser inativados em Cadastros para não receber novas cobranças. Não houve limpeza destrutiva de registros existentes.
+A revisão da foto solar identificou erro de transcrição no pacote privado anterior: um pagamento foi registrado a maior. A correção privada entregue valida a identidade e o valor do lançamento, corrige-o e registra o motivo. O total transcrito corrigido concilia o cabeçalho da fonte. Um segundo apontamento anterior sobre a indicação PAGO também foi retirado após revisão da foto. Isso não equivale à conciliação bancária real.
 
-
-## Complemento de 24/11/2026
-
-A versão 0.3.2 conclui a central de relatórios, planilha geral de todas as rubricas, exportação Excel, demonstrativo individual completo, atualização com aviso, guia de instalação e foto do condomínio. O pacote privado 0.3.1 continua compatível e não teve seus valores alterados.
-
-O instalador 0.3.2 foi executado e reaplicado em PostgreSQL local, seguido da importação real duas vezes sem duplicação. Um fechamento apenas na cópia de teste gerou 31 faturas, total R$ 5.609,94. O demonstrativo do servidor correspondeu ao cálculo do cliente e preservou os 26 participantes dos grupos principais, sem expor nomes/IDs de outros responsáveis. O arquivo privado entregue continua com novembro em rascunho e com pendências.
-
-A causa do problema observado pelo usuário no menu Relatórios do ambiente dele não foi confirmada remotamente. A central entregue foi reestruturada e seus dez relatórios abriram, imprimiram e exportaram no navegador local. A confirmação no site efetivamente publicado faz parte da entrada em uso.
-
-Não há implantação remota, conta real de condômino testada, confirmação de entrega real de e-mail ou publicação neste pacote. Ver ROTEIRO_DE_ENTRADA_EM_USO.md para passos e limites.
+O instalador cumulativo, a correção privada e as interfaces precisam ser aplicados pelo responsável no ambiente existente. Não reimportar o pacote privado antigo. A documentação histórica anterior conserva evidências da versão em que cada teste ocorreu; o resumo desta versão consta em TESTES_DE_HOMOLOGACAO.md.
