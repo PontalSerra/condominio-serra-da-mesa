@@ -1,5 +1,5 @@
 /* Atualização por decisão do usuário, mantendo o conjunto de arquivos da versão. */
-export function watchUpdates({navigator:nav=globalThis.navigator,window:win=globalThis.window,document:doc=globalThis.document,version='0.3.5',notify=()=>{}}={}) {
+export function watchUpdates({navigator:nav=globalThis.navigator,window:win=globalThis.window,document:doc=globalThis.document,version='0.3.6',notify=()=>{}}={}) {
  let registration=null,reloading=false,requested=false,prompt=null;
  const dirty=()=>!!doc.querySelector('form[data-dirty="true"]');
  const banner=()=>{let box=doc.getElementById('app-update');if(!box){box=doc.createElement('aside');box.id='app-update';box.className='update-banner no-print';box.setAttribute('role','status');doc.body.appendChild(box);}return box;};

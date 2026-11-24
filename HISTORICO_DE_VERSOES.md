@@ -1,3 +1,7 @@
+# 0.3.6 — 24/11/2026
+
+Notas privadas de melhorias, detalhamento das leituras próprias na explicação mensal, prévia individual publicada antes do fechamento, invalidação automática após mudanças e exclusão controlada do teste fictício. Entrega local, não publicada automaticamente.
+
 # 0.3.5 — atualização cumulativa — 24/11/2026
 
 Inclui 0.3.3/0.3.4. Simular fechamento sem gravação e reabrir mês com arquivo histórico e bloqueios de dependências. Documentos gerais, do mês e do investimento solar com armazenamento privado, rascunho/publicação para membros e consulta em celular. Links oficiais em Vida no Pontal. Cadastro, entrada e remoção de chaves de acesso, condicionados à ativação no Supabase e suporte do aparelho. Guia e ícone Windows. Correção solar privada separada, com auditoria e repetição segura. Novembro não foi fechado nem suas pendências resolvidas automaticamente. Sem publicação remota.

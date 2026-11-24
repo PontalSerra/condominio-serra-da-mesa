@@ -1,3 +1,9 @@
+# Verificações 0.3.6 — locais
+
+63 testes Node/PGlite aprovados. Incluem RLS das notas, conclusão com versão/motivo, publicação administrativa de prévias, origem alterada, isolamento entre famílias e coproprietário autorizado, proibição de escrita pelo morador, invalidação de prévia, ausência de fatura gerada e exclusão exata do teste com vínculos bloqueados e auditoria. Testes financeiros anteriores preservados.
+
+Interface automatizada: explicação provisória acessada por login de condômino simulado, oito seções, leituras próprias e tela de 390 px sem transbordamento; regressão de 50 cliques de navegação em cinco tamanhos e dez relatórios com Excel. botão no perfil administrativo, criar/editar/copiar estrutura de nota, persistência após recarregar, status e validação, botão oculto ao condômino, layout móvel. Fluxo de explicação usa provedor de autenticação simulado; segurança efetiva também testada no PostgreSQL local. Não houve operação de escrita no Supabase ou GitHub remoto. Não foram testados aparelhos físicos nem ativadas integrações externas.
+
 # Validação local 0.3.5 — 24/11/2026
 
 ## Testes automatizados

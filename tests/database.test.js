@@ -5,7 +5,7 @@ let db;
 async function asUser(id,fn){await db.exec('SET ROLE authenticated');await db.query("SELECT set_config('request.jwt.claim.sub',$1,false)",[id]);try{return await fn();}finally{await db.exec('RESET ROLE');}}
 const settings=()=>Object.fromEntries(['caretaker','lighting','provision','extra'].map(key=>[key,{mode:'include',shares:1}]));
 test.before(async()=>{db=new PGlite();await db.exec(`CREATE ROLE anon;CREATE ROLE authenticated;CREATE SCHEMA auth;CREATE TABLE auth.users(id uuid PRIMARY KEY,email text,email_confirmed_at timestamptz,raw_user_meta_data jsonb NOT NULL DEFAULT '{}');CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$SELECT nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;GRANT USAGE ON SCHEMA auth TO authenticated;GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated;CREATE SCHEMA storage;CREATE TABLE storage.buckets(id text PRIMARY KEY,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);CREATE TABLE storage.objects(id uuid DEFAULT gen_random_uuid(),bucket_id text,name text);ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;`);
- for(const file of ['schema.sql','migracao_v0_2.sql','migracao_v0_3_1.sql','importacao_privada.sql','migracao_v0_3_2.sql','migracao_v0_3_4.sql','migracao_v0_3_5.sql']){const sql=(await fs.readFile(new URL('../supabase/'+file,import.meta.url),'utf8')).replace('create extension if not exists pgcrypto;','');await db.exec(sql);}
+ for(const file of ['schema.sql','migracao_v0_2.sql','migracao_v0_3_1.sql','importacao_privada.sql','migracao_v0_3_2.sql','migracao_v0_3_4.sql','migracao_v0_3_5.sql','migracao_v0_3_6.sql']){const sql=(await fs.readFile(new URL('../supabase/'+file,import.meta.url),'utf8')).replace('create extension if not exists pgcrypto;','');await db.exec(sql);}
  await db.exec('GRANT SELECT ON public.app_admins TO authenticated');
  for(const id of [admin,userA,userB])await db.query('INSERT INTO auth.users(id,email,email_confirmed_at)VALUES($1,$2,now())',[id,id+'@example.invalid']);
  await db.query('INSERT INTO public.app_admins(user_id)VALUES($1)',[admin]);
@@ -13,7 +13,7 @@ test.before(async()=>{db=new PGlite();await db.exec(`CREATE ROLE anon;CREATE ROL
  await db.query('INSERT INTO public.lots(id,number,owner_id,built)VALUES($1,$2,$3,true),($4,$5,$6,false)',['20000000-0000-4000-8000-000000000001','1',ownerA,'20000000-0000-4000-8000-000000000002','2',ownerB]);
 });
 test.after(async()=>{await db.close();});
-test('migração reaplicada sem perda de cadastros',async()=>{for(const file of ['migracao_v0_3_1.sql','migracao_v0_3_2.sql','migracao_v0_3_4.sql','migracao_v0_3_5.sql'])await db.exec(await fs.readFile(new URL('../supabase/'+file,import.meta.url),'utf8'));assert.equal((await db.query('SELECT count(*)::integer AS n FROM public.owners')).rows[0].n,2);});
+test('migração reaplicada sem perda de cadastros',async()=>{for(const file of ['migracao_v0_3_1.sql','migracao_v0_3_2.sql','migracao_v0_3_4.sql','migracao_v0_3_5.sql','migracao_v0_3_6.sql'])await db.exec(await fs.readFile(new URL('../supabase/'+file,import.meta.url),'utf8'));assert.equal((await db.query('SELECT count(*)::integer AS n FROM public.owners')).rows[0].n,2);});
 test('convite vincula somente o cadastro autorizado e não eleva permissão',async()=>{const token='a'.repeat(64),hash=createHash('sha256').update(token).digest('hex');await asUser(admin,()=>db.query('SELECT public.pontal_issue_invite($1,$2)',[ownerA,hash]));const result=await asUser(userA,()=>db.query('SELECT public.pontal_redeem_invite($1) AS result',[token]));assert.equal(result.rows[0].result.ok,true);const visible=await asUser(userA,()=>db.query('SELECT id FROM public.owners'));assert.deepEqual(visible.rows.map(r=>r.id),[ownerA]);const admins=await asUser(userA,()=>db.query('SELECT * FROM public.app_admins'));assert.equal(admins.rows.length,0);const replay=await asUser(userB,()=>db.query('SELECT public.pontal_redeem_invite($1) AS result',[token]));assert.equal(replay.rows[0].result.ok,false);const other=await asUser(userB,()=>db.query('SELECT id FROM public.owners'));assert.equal(other.rows.length,0);const pix=await asUser(userB,()=>db.query('SELECT * FROM public.payment_config'));assert.equal(pix.rows.length,0);const notices=await asUser(userB,()=>db.query('SELECT * FROM public.announcements'));assert.equal(notices.rows.length,0);});
 test('condômino não acessa fatura alheia nem regras administrativas',async()=>{const result=await asUser(userA,()=>db.query('SELECT * FROM public.allocation_rules'));assert.equal(result.rows.length,0);await assert.rejects(()=>asUser(userA,()=>db.query('SELECT public.pontal_issue_invite($1,$2)',[ownerB,'b'.repeat(64)])),/administrativo/);await assert.rejects(()=>asUser(userA,()=>db.query('INSERT INTO public.owners(name)VALUES($1)',['Intrusão'])),/row-level security/);await assert.rejects(()=>asUser(userA,()=>db.query('SELECT public.pontal_source_snapshot()')),/administrativo/);});
 test('regra com cotas inválidas é rejeitada no banco',async()=>{const s=settings();s.lighting.shares=0;await assert.rejects(()=>asUser(admin,()=>db.query('INSERT INTO public.allocation_rules(owner_id,start_period,settings,reason)VALUES($1,$2,$3,$4)',[ownerB,'2026-11',s,'Teste'])),/cotas inválido/);});
@@ -89,4 +89,58 @@ test('anexos publicados do mês e do solar são visíveis aos membros antes do f
  const outsider='00000000-0000-4000-8000-000000000099';assert.equal((await asUser(outsider,()=>db.query("SELECT name FROM storage.objects WHERE bucket_id='condominium-documents'"))).rows.length,0);
  const changed=(await asUser(userA,()=>db.query("UPDATE public.community_items SET published=true WHERE document_path='documentos/foto-privada' RETURNING id"))).rows;assert.equal(changed.length,0);
  await asUser(admin,()=>db.query("UPDATE public.community_items SET published=false WHERE document_path='documentos/conta-publica'"));assert.equal((await asUser(userA,()=>db.query("SELECT name FROM storage.objects WHERE name='documentos/conta-publica'"))).rows.length,0);
+});
+
+test('melhorias são privadas por administrador, persistentes e sem acesso de condôminos',async()=>{
+ const note=(await asUser(admin,()=>db.query("INSERT INTO public.improvement_notes(title,problem,app_version)VALUES('Ajustar tela','Problema fictício','0.3.6') RETURNING id,status"))).rows[0];assert.equal(note.status,'pending');
+ await assert.rejects(()=>asUser(userA,()=>db.query("INSERT INTO public.improvement_notes(title,problem)VALUES('Intrusão','Sem autorização')")),/row-level security/);
+ assert.equal((await asUser(userA,()=>db.query('SELECT * FROM public.improvement_notes'))).rows.length,0);
+ const other='00000000-0000-4000-8000-000000000098';await db.query('INSERT INTO auth.users(id,email,email_confirmed_at)VALUES($1,$2,now())',[other,'outro-admin@example.invalid']);await db.query('INSERT INTO public.app_admins(user_id)VALUES($1)',[other]);assert.equal((await asUser(other,()=>db.query('SELECT * FROM public.improvement_notes'))).rows.length,0);
+ await assert.rejects(()=>asUser(other,()=>db.query('INSERT INTO public.improvement_notes(user_id,title,problem)VALUES($1,$2,$3)',[admin,'Outra pessoa','Tentativa de alterar dono'])),/row-level security/);
+ await assert.rejects(()=>asUser(admin,()=>db.query("UPDATE public.improvement_notes SET status='done' WHERE id=$1",[note.id])),/check constraint/);
+ await asUser(admin,()=>db.query("UPDATE public.improvement_notes SET status='done',resolved_version='0.3.7',resolution='Conferido somente neste teste fictício' WHERE id=$1",[note.id]));
+ assert.equal((await asUser(admin,()=>db.query('SELECT status FROM public.improvement_notes WHERE id=$1',[note.id]))).rows[0].status,'done');
+ await db.exec('SET ROLE anon');try{await assert.rejects(()=>db.query('SELECT * FROM public.improvement_notes'),/permission denied/);}finally{await db.exec('RESET ROLE');}
+});
+
+test('explicação provisória exige publicação administrativa, isola cada família e invalida após alteração',async()=>{
+ const period='2031-03',a='10000000-0000-4000-8000-000000000031',b='10000000-0000-4000-8000-000000000032',u='00000000-0000-4000-8000-000000000031',v='00000000-0000-4000-8000-000000000032',son='00000000-0000-4000-8000-000000000033';
+ for(const id of [u,v,son])await db.query('INSERT INTO auth.users(id)VALUES($1)',[id]);
+ await db.query("INSERT INTO public.periods(id,due_date)VALUES($1,'2031-04-10')",[period]);
+ await db.query("INSERT INTO public.owners(id,name,login_user_id)VALUES($1,'Família fictícia 1',$2),($3,'Família fictícia 2',$4)",[a,u,b,v]);
+ await db.query('INSERT INTO public.owner_members(owner_id,user_id)VALUES($1,$2)',[a,son]);
+ const report={period_id:period,status:'draft',energy:{invoice:100},pending:['Unidade da água ainda não confirmada.']},items=[{owner_id:a,calculation:{items:[{code:'energy',amount:40,detail:'Parcela A'}],current_amount:40}},{owner_id:b,calculation:{items:[{code:'energy',amount:60,detail:'Parcela B'}],current_amount:60}}];
+ let source=(await asUser(admin,()=>db.query('SELECT public.pontal_source_snapshot() AS s'))).rows[0].s;
+ await assert.rejects(()=>asUser(u,()=>db.query('SELECT public.pontal_publish_explanations($1,$2,$3,$4)',[period,report,items,source])),/administrativo/);
+ await db.query("UPDATE public.periods SET notes='mudou' WHERE id=$1",[period]);
+ await assert.rejects(()=>asUser(admin,()=>db.query('SELECT public.pontal_publish_explanations($1,$2,$3,$4)',[period,report,items,source])),/alterados/);
+ source=(await asUser(admin,()=>db.query('SELECT public.pontal_source_snapshot() AS s'))).rows[0].s;
+ await asUser(admin,()=>db.query('SELECT public.pontal_publish_explanations($1,$2,$3,$4)',[period,report,items,source]));
+ for(const id of [u,son]){const rows=(await asUser(id,()=>db.query('SELECT * FROM public.month_explanations'))).rows;assert.equal(rows.length,1);assert.equal(rows[0].owner_id,a);assert.equal(rows[0].own_calculation.current_amount,40);assert.ok(!JSON.stringify(rows).includes('Parcela B'));}
+ assert.equal((await asUser(v,()=>db.query('SELECT * FROM public.month_explanations'))).rows[0].own_calculation.current_amount,60);
+ await assert.rejects(()=>asUser(u,()=>db.query('DELETE FROM public.month_explanations')),/permission denied/);
+ await db.exec('SET ROLE anon');try{await assert.rejects(()=>db.query('SELECT * FROM public.month_explanations'),/permission denied/);}finally{await db.exec('RESET ROLE');}
+ assert.equal((await db.query('SELECT count(*)::int n FROM public.invoices WHERE period_id=$1',[period])).rows[0].n,0);
+ await db.query("UPDATE public.periods SET notes='nova alteração' WHERE id=$1",[period]);assert.equal((await asUser(u,()=>db.query('SELECT * FROM public.month_explanations'))).rows.length,0);
+ source=(await asUser(admin,()=>db.query('SELECT public.pontal_source_snapshot() AS s'))).rows[0].s;await asUser(admin,()=>db.query('SELECT public.pontal_publish_explanations($1,$2,$3,$4)',[period,report,items,source]));await db.query('UPDATE public.owners SET active=false WHERE id=$1',[a]);assert.equal((await asUser(u,()=>db.query('SELECT * FROM public.month_explanations'))).rows.length,0);
+});
+
+test('exclusão é exata, administrativa, auditada e não remove cadastro com vínculo',async()=>{
+ const id='46785172-f607-463c-92ef-bf2ffa60e3ae',lot='20000000-0000-4000-8000-000000000099';
+ await db.query("INSERT INTO public.owners(id,name,active)VALUES($1,'Teste de Homologação',false)",[id]);await db.query("INSERT INTO public.lots(id,number,owner_id)VALUES($1,'TESTE-01',$2)",[lot,id]);
+ await assert.rejects(()=>asUser(userA,()=>db.query('SELECT public.pontal_remove_homologation()')),/administrativo/);
+ await assert.rejects(()=>asUser(userA,()=>db.query('SELECT public.pontal_remove_homologation_internal()')),/permission denied/);
+ await db.query('INSERT INTO public.owner_members(owner_id,user_id)VALUES($1,$2)',[id,userA]);
+ await assert.rejects(()=>asUser(admin,()=>db.query('SELECT public.pontal_remove_homologation()')),/vínculos/);
+ assert.equal((await db.query('SELECT count(*)::int n FROM public.lots WHERE id=$1',[lot])).rows[0].n,1);
+ await db.query('DELETE FROM public.owner_members WHERE owner_id=$1',[id]);
+ await db.query("UPDATE public.owners SET name='Cadastro real alterado' WHERE id=$1",[id]);await assert.rejects(()=>asUser(admin,()=>db.query('SELECT public.pontal_remove_homologation()')),/alterado/);
+ await db.query("UPDATE public.owners SET name='Teste de Homologação' WHERE id=$1",[id]);
+ const before=(await db.query('SELECT count(*)::int n FROM public.owners WHERE id<>$1',[id])).rows[0].n;
+ // Simula o instalador no registro fictício existente de produção.
+ await db.exec(await fs.readFile(new URL('../supabase/migracao_v0_3_6.sql',import.meta.url),'utf8'));
+ assert.equal((await db.query('SELECT count(*)::int n FROM public.owners WHERE id=$1',[id])).rows[0].n,0);assert.equal((await db.query('SELECT count(*)::int n FROM public.lots WHERE id=$1',[lot])).rows[0].n,0);
+ assert.equal((await db.query('SELECT count(*)::int n FROM public.owners')).rows[0].n,before);
+ assert.equal((await db.query("SELECT count(*)::int n FROM public.audit_log WHERE table_name='owners' AND record_id=$1 AND operation='DELETE'",[id])).rows[0].n,1);
+ assert.equal((await asUser(admin,()=>db.query('SELECT public.pontal_remove_homologation() AS r'))).rows[0].r.already_removed,true);
 });

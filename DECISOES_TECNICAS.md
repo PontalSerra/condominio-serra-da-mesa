@@ -1,3 +1,7 @@
+# Revisão 0.3.6
+
+Anotações usam RLS por auth.uid + is_admin, sem auditoria compartilhada que exponha o conteúdo privado. Conclusão exige versão e motivo. Prévias são projeções do mesmo calculate/monthlyReport usado no fechamento, publicadas via RPC administrativa com validação da fotografia de origem e bloqueio de tabelas. RLS limita own_calculation à família vinculada e ativa. Nenhuma tabela-fonte privada é liberada ao condômino. Gatilhos removem prévias ao mudar a origem; o RPC não emite fatura. Exclusão usa identidade exata do teste, integridade referencial, saldo zero, ausência de dependências e auditoria. O migrador não apaga histórico financeiro para contornar vínculos.
+
 # Decisões 0.3.5
 
 Reabertura apenas sem dependências detectadas. Arquivo íntegro do período e faturas anteriores em month_reopen_events (consulta administrativa), remoção das faturas do razão ativo e nova conferência obrigatória. Trigger aceita a passagem somente da função privilegiada, sob lock e contexto local; chamadas do papel authenticated com variável forjada continuam bloqueadas. Pagamentos sem alocação por fatura são tratados conservadoramente. IDs arquivados não podem ser reutilizados.

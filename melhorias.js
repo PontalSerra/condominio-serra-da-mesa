@@ -1,0 +1,12 @@
+export const NOTE_STATUS={pending:'Pendente',in_progress:'Em andamento',done:'Concluída',not_possible:'Não viável'};
+export function noteErrors(note){const errors=[];
+ if(!note.title?.trim()||note.title.length>160)errors.push('Informe um título de até 160 caracteres.');
+ if(!note.problem?.trim()||note.problem.length>6000)errors.push('Descreva o problema em até 6.000 caracteres.');
+ if(!Object.hasOwn(NOTE_STATUS,note.status))errors.push('Situação inválida.');
+ if([note.suggestion,note.resolution].some(t=>(t||'').length>6000))errors.push('Texto maior que 6.000 caracteres.');
+ if(['done','not_possible'].includes(note.status)&&!note.resolution?.trim())errors.push('Informe o resultado ou o motivo da inviabilidade.');
+ if(note.status==='done'&&!note.resolved_version?.trim())errors.push('Informe a versão em que a melhoria foi concluída.');
+ return errors;
+}
+export function noteText(n){return `Melhoria: ${n.title}\nSituação: ${NOTE_STATUS[n.status]}\nVersão registrada: ${n.app_version||'Não informada'}\nTela: ${n.context||'Não informada'}\n\nProblema:\n${n.problem}\n\nAlteração desejada:\n${n.suggestion||'Não informada'}\n\nResultado / motivo:\n${n.resolution||'Ainda não registrado'}\nVersão da conclusão: ${n.resolved_version||'Não informada'}`;}
+export function notesHtml(notes,{h,fmtDate}){return `<h3>Minhas melhorias</h3><p>Registros privados desta conta administrativa, salvos no condomínio. Anotar não implementa nem envia a sugestão automaticamente. Use Copiar para encaminhar a solicitação.</p><button class="btn primary" data-action="notenew">＋ Anotar melhoria</button>${notes.length?notes.slice().sort((a,b)=>(b.updated_at||'').localeCompare(a.updated_at||'')).map(n=>`<article class="community-item"><span class="pill">${h(NOTE_STATUS[n.status])}</span><h3>${h(n.title)}</h3><p class="community-text">${h(n.problem)}</p><p class="mini muted">${h(n.app_version)} • ${h(n.context)} • ${h(fmtDate(n.updated_at))}</p>${n.status==='done'?`<p>Concluída na versão ${h(n.resolved_version)}</p>`:''}<div class="actions"><button class="btn sm outline" data-action="noteedit" data-id="${h(n.id)}">Abrir / editar</button><button class="btn sm light" data-action="notecopy" data-id="${h(n.id)}">Copiar solicitação</button><button class="btn sm outline" data-action="notedelete" data-id="${h(n.id)}">Excluir</button></div></article>`).join(''):'<p class="note">Nenhuma melhoria anotada nesta conta.</p>'}`;}

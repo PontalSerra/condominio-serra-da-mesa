@@ -1,3 +1,7 @@
+# Correções 0.3.6
+
+Depois de aplicar a migração e publicar os arquivos, conferir Anotar melhoria no perfil administrativo e a remoção do Teste de Homologação. Em Fechamento, salvar custos/leituras e usar Disponibilizar explicação provisória para mostrá-la antes do fechamento. Mudar qualquer fonte financeira retira as prévias; republicar após conferir. A prévia não é fatura e não deve ser usada para pagamento. Não é necessário fechar novembro para testar esta consulta.
+
 # Entrada em uso 0.3.5
 
 1. Aplicar supabase/INSTALAR_OU_ATUALIZAR.sql no projeto Supabase existente. Não recriar projeto, apagar tabelas nem reimportar dados.

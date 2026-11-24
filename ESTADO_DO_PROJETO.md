@@ -1,13 +1,11 @@
-# Estado da versão 0.3.5 — 24/11/2026
+# Estado da versão 0.3.6 — 24/11/2026
 
-Preparada em arquivos, sem publicação. O site efetivo foi consultado durante a revisão e app.js ainda corresponde à versão 0.3.2. A atualização 0.3.5 incorpora 0.3.3 e 0.3.4, preservando a configuração pública do projeto e os dados existentes.
+A versão 0.3.5 foi aplicada pelo usuário no Supabase e no GitHub. O GitHub Pages apresentou sucesso. A correção privada solar também foi executada e retornou pagamento corrigido e saldo zero do registro corrigido. Não reaplicar a importação antiga.
 
-Incluídos menu corrigido, contas familiares e convites independentes, identificação do síndico, simulação e reabertura auditada, Vida no Pontal, documentos do mês e do solar, chaves de acesso e ícone Windows. Passkeys dependem da ativação e conferência no serviço real e em aparelhos compatíveis.
+A versão 0.3.6 foi preparada e testada localmente. A migração e os arquivos precisam ser aplicados pelo responsável. Não há acesso administrativo remoto usado nesta revisão. A remoção do teste foi validada numa cópia fictícia; ainda não foi confirmada em produção.
 
-A instalação 0.3.2 e a importação real foram executadas pelo usuário. Dois administradores tiveram e-mail confirmado. Um terceiro acesso administrativo foi orientado por SQL para a conta pessoal do síndico, mas o resultado não foi verificado nesta revisão. Não conceder administração automaticamente nem divulgar e-mails pessoais na documentação pública.
+Incluídos o botão privado Anotar melhoria, explicação detalhada com consumo próprio, publicação opcional de prévias antes de fechar e exclusão restrita ao registro de homologação. A publicação de prévias é explícita; mudar dados de origem invalida as prévias. Faturas definitivas e relatório preservado mantêm seu fluxo anterior.
 
-Novembro permanece com pendências reais de leitura geral/bomba, unidade dos hidrômetros, composição do salário, participantes e pagamentos posteriores. Não houve fechamento ou reabertura no projeto remoto. A conferência das faturas importadas foi local, com pendências resolvidas somente na cópia de teste.
+O histórico financeiro real e as regras aprovadas não foram alterados. Novembro não foi fechado nem teve pendências resolvidas automaticamente. Nenhum privilégio administrativo novo foi concedido.
 
-A revisão da foto solar identificou erro de transcrição no pacote privado anterior: um pagamento foi registrado a maior. A correção privada entregue valida a identidade e o valor do lançamento, corrige-o e registra o motivo. O total transcrito corrigido concilia o cabeçalho da fonte. Um segundo apontamento anterior sobre a indicação PAGO também foi retirado após revisão da foto. Isso não equivale à conciliação bancária real.
-
-O instalador cumulativo, a correção privada e as interfaces precisam ser aplicados pelo responsável no ambiente existente. Não reimportar o pacote privado antigo. A documentação histórica anterior conserva evidências da versão em que cada teste ocorreu; o resumo desta versão consta em TESTES_DE_HOMOLOGACAO.md.
+Face ID/passkeys exigem ativação externa e teste físico; informações ambientais são links. Integrações de envio automático, banco e solicitações permanecem pendentes. Consulte LEIA_PRIMEIRO.md.
